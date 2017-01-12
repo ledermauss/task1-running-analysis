@@ -1,0 +1,25 @@
+//*****************************************************************************
+// Title:         SensorEvent
+// Description:   An event type for the sensor data and the timestamp in seconds.
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+
+event SensorEvent {
+	integer sensorId;
+	integer timeStamp;
+	integer x;
+	integer y;
+	integer z;
+	integer velocity;
+	integer acceleration;
+	integer velocityX;
+	integer velocityY;
+	integer velocityZ;
+	integer accelerationX;
+	integer accelerationY;
+	integer accelerationZ;
+	float seconds;
+}

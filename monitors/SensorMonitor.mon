@@ -1,0 +1,25 @@
+//*****************************************************************************
+// Title:         SensorMonitor
+// Description:   Loga all SensorEvents. This is the starting point for the application logic.
+// Dependencies:  Event type definitions and RawMonitor.mon
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+using com.apama.correlator.timeformat.TimeFormat;
+
+monitor SensorMonitor {
+	TimeFormat timeFormat;
+	action onload() {
+		SensorEvent sensor;
+		on all SensorEvent() : sensor {
+			log sensor.toString() + 
+				", seconds: " + timeFormat.format(sensor.seconds, "HH:mm:ss,SSS") + 
+				", event time: " + sensor.getTime().toString() + 
+				", micro time: " + timeFormat.getMicroTime().toString()
+			at INFO;
+			send sensor to "";
+		}
+	}
+}

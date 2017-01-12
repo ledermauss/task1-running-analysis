@@ -1,0 +1,34 @@
+//*****************************************************************************
+// Title:         RawEvent
+// Description:   An event type for the raw sensor data.
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+
+event RawEvent {
+	integer sensorId;
+	integer timeStamp;
+	integer x;
+	integer y;
+	integer z;
+	integer velocity;
+	integer acceleration;
+	integer velocityX;
+	integer velocityY;
+	integer velocityZ;
+	integer accelerationX;
+	integer accelerationY;
+	integer accelerationZ;
+	
+	action getSourceTime() returns float {
+		string sec := "0.0";
+		integer length := timeStamp.toString().length();
+		if (length > 4) then {
+			sec := timeStamp.toString().substring(0, 5) + "." + timeStamp.toString().substring(5, length);
+		}
+		return sec.toFloat();
+	}
+
+}

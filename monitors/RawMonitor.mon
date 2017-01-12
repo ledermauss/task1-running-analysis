@@ -1,0 +1,20 @@
+//*****************************************************************************
+// Title:         RawMonitor
+// Description:   Creates a SensorEvent from each RawEvent.
+// Dependencies:  Event type definitions
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+
+monitor RawMonitor {
+	action onload() {
+		RawEvent raw;
+		on all RawEvent() : raw {
+			route SensorEvent(raw.sensorId, raw.timeStamp, raw.x, raw.y, raw.z, 
+			                  raw.velocity, raw.acceleration, raw.velocityX, raw.velocityY, raw.velocityZ, 
+			                  raw.accelerationX, raw.accelerationY, raw.accelerationZ, raw.getSourceTime());
+		}
+	}
+}
