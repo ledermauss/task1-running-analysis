@@ -34,11 +34,6 @@ monitor VelocityMonitor {
 //				log "Current time:" + currentTime.toString() + " Avg for player 5" + " : " + avg.toString() at INFO;
 //			}
 //		}
-//		//Mauro: 	Die Funktion muss für jede SpielerId für jedes Zeitfenster aufgerufen werden.
-		//			within 5.0 every 5.0 funktioniert leider nich nicht. Ich denke das liegt 
-		//			daran das wir zu wenige Daten haben.
-		//			Ich denke der rest (die einordnung in die verschiedenen Klassen stehen, ..., rennen
-		//			erfolgt direkt im dashboard.
 	
 		RunningStatistics runningS;
 		on all RunningStatistics() : runningS {

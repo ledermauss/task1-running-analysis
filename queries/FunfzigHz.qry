@@ -17,7 +17,7 @@ query FunfzigHz {
 	}
 
 	
-	find  every PlayerVelocity : pv  
+	find  every PlayerVelocity : pv 
 		select min(pv.timestamp) : ts_start 
 		select max(pv.timestamp) : ts_stop 
 		select mean(pv.velocity.toFloat()) : speedAvg
@@ -25,11 +25,34 @@ query FunfzigHz {
 		{
 		%custom("title":"50Hz") {
 			//integer sensorId := sensorId;
-			string intensity :="braucht ein if";
+			string intensity :="";
+			float vInKmH := speedAvg * 3.6e-6;
+			
+			if ((vInKmH >= 0.0) and (vInKmH <=1.0)) then{
+				
+				intensity := "Standing";
+			} else if (vInKmH <=11.0) then{
+				
+				intensity := "Trot";
+			}else if (vInKmH <=14.0) then{
+				
+				intensity := "Low";
+			}else if (vInKmH <=17.0) then{
+				
+				intensity := "medium";
+			}else if (vInKmH <=24.0) then{
+				
+				intensity := "High";
+			}else{
+				
+				intensity := "Sprint";
+			}
+
+			float distance := (speedAvg * 1e-6) * ((ts_stop.toFloat() * 1e-12) - (ts_start.toFloat() * 1e-12));
 			
 			send RunningStatistics(ts_start, ts_stop, playerId, playerName,
-				intensity, speedXAvg*(ts_stop.toFloat() - ts_start.toFloat()),
-				speedAvg) to "";
+				intensity, distance,
+				vInKmH) to "";
 		}
 	}
 }
