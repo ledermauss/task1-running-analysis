@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.apama.text.launcher.monitorscriptApplication">
-<stringAttribute key="com.apama.launch.dirty" value="1484231371362"/>
+<stringAttribute key="com.apama.launch.dirty" value="1484234280868"/>
 <stringAttribute key="com.apama.text.CONFIG_LOCATION" value="\task1\config\launch\task1.deploy"/>
 <intAttribute key="com.apama.text.CONFIG_VERSION" value="3"/>
 <stringAttribute key="com.apama.text.PROJECT_ATTR" value="task1"/>

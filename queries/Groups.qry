@@ -1,0 +1,30 @@
+//*****************************************************************************
+// Title:         Groups
+// Description:   Group the sensor events by sonsorId and count.
+// Dependencies:  Event type definition
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+using com.apama.aggregates.count;
+
+query Groups {	
+	
+	metadata {
+		"Author":"Software AG"
+	}
+	
+	inputs  {
+		//kez sensorId: gruppiert die Sensoren
+		com.softwareag.saep.SensorEvent() key sensorId within 5.0;
+	}
+	
+	find every SensorEvent : s1
+	select count() : sensorCount {
+
+		%custom("title":"Custom EPL Action 1") {
+			send SensorCounter(sensorId, sensorCount) to "";
+		}
+	}
+}

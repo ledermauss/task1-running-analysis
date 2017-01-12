@@ -1,0 +1,26 @@
+//*****************************************************************************
+// Title:         Sensors
+// Description:   Counts the sensor events in a time window
+// Dependencies:  Event type definition
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+
+query Sensors {	
+	metadata {
+		"Author":"Software AG"
+	}
+	
+	inputs  {
+		SensorEvent() within 5 sec;
+	}
+
+	find every SensorEvent : s1
+	select com.apama.aggregates.count() : e1  {
+		%custom("title":"Custom EPL Action 1") {
+			send Counter(e1) to "";
+		}
+	}
+}

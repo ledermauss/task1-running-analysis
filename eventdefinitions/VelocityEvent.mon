@@ -12,10 +12,13 @@ package com.softwareag.saep;
 event PlayerVelocity {
 	integer playerId;
 	string playerName;
-	float timestamp;
-	string intensity;
-	float speed;
-	float distance
-	
+	integer velocity;
+	integer velocityX;
+	integer timestamp;	
 }
 
+//event PlayerVelocity {
+//integer playerId;
+//integer velocity;
+//
+//}

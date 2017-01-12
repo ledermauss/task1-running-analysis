@@ -19,7 +19,8 @@ monitor SensorMonitor {
 				", event time: " + sensor.getTime().toString() + 
 				", micro time: " + timeFormat.getMicroTime().toString()
 			at INFO;
-			send sensor to "";
+			//com.apama.queries
+			send sensor to "com.apama.queries";
 		}
 	}
 }

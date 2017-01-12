@@ -1,0 +1,22 @@
+//*****************************************************************************
+// Title:         Counter
+// Description:   Counts sensor events
+// Author:        Software AG
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+
+event Counter {
+	integer count;
+}
+
+event SensorCounter {
+	integer sensorId;
+	integer count;
+}
+
+event PlayerCounter {
+	integer playerId;
+	integer count;
+}
