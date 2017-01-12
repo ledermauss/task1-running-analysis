@@ -17,6 +17,17 @@ event PlayerVelocity {
 	integer timestamp;	
 }
 
+event RunningStatistics {
+	integer ts_start;
+	integer ts_stop;
+	integer player_id;
+	string player_name;
+	string intensity;
+	float distance;
+	float speed;
+}
+
+
 //event PlayerVelocity {
 //integer playerId;
 //integer velocity;

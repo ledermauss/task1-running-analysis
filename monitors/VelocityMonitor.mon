@@ -8,6 +8,7 @@
 package com.softwareag.saep;
 using com.apama.aggregates.mean;
 using com.apama.correlator.timeformat.TimeFormat;
+using com.apama.aggregates.min;
 
 monitor VelocityMonitor {
 
@@ -16,27 +17,33 @@ monitor VelocityMonitor {
 		on all PlayerVelocity() : playerV {
 			log playerV.toString() at INFO;
 		}	
-		float avg;
-		//frequenz: 50 Hz (wird getrigerred jede 20 milisekunden.
-		// Ich will das überprüfen durch  TimeFormat.getMicroTime, geht nicht
-		on all wait(0.02) {
-			from v in all PlayerVelocity(playerId = 0)
-			  within 0.02
-			  select mean(v.velocity.toFloat()) : avg {
-				//log "Current time:" + TimeFormat.getMicroTime() + "Avg for player 0" + " : " + avg.toString() at INFO;
-				log "Current time:" + currentTime.toString() + "Avg for player 0" + " : " + avg.toString() at INFO;
-
-			}
-			from v in all PlayerVelocity(playerId = 5)
-			  within 0.02
-			  select mean(v.velocity.toFloat()) : avg {
-				log "Current time:" + currentTime.toString() + " Avg for player 5" + " : " + avg.toString() at INFO;
-			}
-		}
-		//Mauro: 	Die Funktion muss für jede SpielerId für jedes Zeitfenster aufgerufen werden.
+//		float avg;
+//		//frequenz: 50 Hz (wird getrigerred jede 20 milisekunden.
+//		// Ich will das überprüfen durch  TimeFormat.getMicroTime, geht nicht
+//		on all wait(0.02) {
+//			from v in all PlayerVelocity(playerId = 0)
+//			  within 0.02
+//			  select mean(v.velocity.toFloat()) : avg {
+//				//log "Current time:" + TimeFormat.getMicroTime() + "Avg for player 0" + " : " + avg.toString() at INFO;
+//				log "Current time:" + currentTime.toString() + "Avg for player 0" + " : " + avg.toString() at INFO;
+//
+//			}
+//			from v in all PlayerVelocity(playerId = 5)
+//			  within 0.02
+//			  select mean(v.velocity.toFloat()) : avg {
+//				log "Current time:" + currentTime.toString() + " Avg for player 5" + " : " + avg.toString() at INFO;
+//			}
+//		}
+//		//Mauro: 	Die Funktion muss für jede SpielerId für jedes Zeitfenster aufgerufen werden.
 		//			within 5.0 every 5.0 funktioniert leider nich nicht. Ich denke das liegt 
 		//			daran das wir zu wenige Daten haben.
 		//			Ich denke der rest (die einordnung in die verschiedenen Klassen stehen, ..., rennen
 		//			erfolgt direkt im dashboard.
+	
+		RunningStatistics runningS;
+		on all RunningStatistics() : runningS {
+			log runningS.toString() at INFO;
+			
+		}
 	}
 }	

@@ -8,13 +8,14 @@
 
 package com.softwareag.saep;
 
+
 query Velocity {	
 	inputs  {
 		SensorEvent() key sensorId retain 1;
 	}
 
 	
-	find  SensorEvent : s1   {
+	find  SensorEvent : s1  {
 		%custom("title":"Velocity") {
 			//Sensor::Player
 			dictionary<integer, integer> sensorPlayer := {4:0,8:0,10:0,12:0,
@@ -30,10 +31,10 @@ query Velocity {
 				10:"Kevin Baer",11:"Luca Ziegler", 12:"Ben Mueller", 13:"Vale Reitstetter",
 				14:"Christopher Lee",15:"Leon Heinze",16:"Leo Langhans",17:"Referee"
 			}; 
-			integer sensorId := s1.sensorId;
+			//integer sensorId := sensorId;
 			integer playerId := sensorPlayer[sensorId];
 			string playerName := playerNameDict[playerId];
-			send PlayerVelocity(playerId, playerName, s1.velocity, s1.velocityX, s1.timeStamp)
+			 send PlayerVelocity(playerId, playerName, s1.velocity, s1.velocityX, s1.timeStamp)
 			 to "";
 		}
 	}

@@ -1,0 +1,35 @@
+//*****************************************************************************
+// Title:         FunfzigHz
+// Description:   FunfzigHz description
+// Dependencies:  None
+// Author:        istmapara
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+using com.apama.aggregates.min;
+using com.apama.aggregates.max;
+using com.apama.aggregates.mean;
+
+query FunfzigHz {	
+	inputs  {
+		PlayerVelocity() key playerId, playerName within 20 msec;
+	}
+
+	
+	find  every PlayerVelocity : pv  
+		select min(pv.timestamp) : ts_start 
+		select max(pv.timestamp) : ts_stop 
+		select mean(pv.velocity.toFloat()) : speedAvg
+		select mean(pv.velocityX.toFloat()) : speedXAvg
+		{
+		%custom("title":"50Hz") {
+			//integer sensorId := sensorId;
+			string intensity :="braucht ein if";
+			
+			send RunningStatistics(ts_start, ts_stop, playerId, playerName,
+				intensity, speedXAvg*(ts_stop.toFloat() - ts_start.toFloat()),
+				speedAvg) to "";
+		}
+	}
+}
