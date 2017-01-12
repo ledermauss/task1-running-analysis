@@ -37,6 +37,7 @@ monitor VelocityMonitor {
 	
 		RunningStatistics runningS;
 		on all RunningStatistics() : runningS {
+			
 			log runningS.toString() at INFO;
 			
 		}

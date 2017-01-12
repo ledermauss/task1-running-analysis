@@ -14,6 +14,7 @@ using com.apama.aggregates.mean;
 query FunfzigHz {	
 	inputs  {
 		PlayerVelocity() key playerId, playerName within 20 msec;
+		//oder retain 4
 	}
 
 	
@@ -53,6 +54,7 @@ query FunfzigHz {
 			send RunningStatistics(ts_start, ts_stop, playerId, playerName,
 				intensity, distance,
 				vInKmH) to "";
+				
 		}
 	}
 }
