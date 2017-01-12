@@ -9,7 +9,7 @@
 package com.softwareag.saep;
 
 
-event PlayerVelocity {
+event PlayerEvent {
 	integer playerId;
 	string playerName;
 	integer velocity;
@@ -17,7 +17,7 @@ event PlayerVelocity {
 	integer timestamp;	
 }
 
-event RunningStatistics {
+event PlayerStatistics {
 	integer ts_start;
 	integer ts_stop;
 	integer player_id;
@@ -25,6 +25,30 @@ event RunningStatistics {
 	string intensity;
 	float distance;
 	float speed;
+}
+
+//event AggregateIntensity{
+//	integer ts;
+//	integer player_id;
+//	string player_name;
+//	string intensity;
+//	float distance;
+//}
+
+event AggregateStatistics {
+	integer ts;
+	integer player_id;
+	integer standing_time;
+	integer trot_time;
+	float trot_distance;
+	integer low_time;
+	float low_distance;
+	integer medium_time;
+	float medium_distance;
+	integer hihgh_time;
+	float high_distance;
+	integer sprint_time;
+	float sprint_distance;
 }
 
 

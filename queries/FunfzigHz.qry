@@ -13,18 +13,18 @@ using com.apama.aggregates.mean;
 
 query FunfzigHz {	
 	inputs  {
-		PlayerVelocity() key playerId, playerName within 20 msec;
+		PlayerEvent() key playerId, playerName within 20 msec;
 		//oder retain 4
 	}
 
 	
-	find  every PlayerVelocity : pv 
-		select min(pv.timestamp) : ts_start 
-		select max(pv.timestamp) : ts_stop 
-		select mean(pv.velocity.toFloat()) : speedAvg
-		select mean(pv.velocityX.toFloat()) : speedXAvg
+	find  every PlayerEvent : pe 
+		select min(pe.timestamp) : ts_start 
+		select max(pe.timestamp) : ts_stop 
+		select mean(pe.velocity.toFloat()) : speedAvg
+		select mean(pe.velocityX.toFloat()) : speedXAvg
 		{
-		%custom("title":"50Hz") {
+		%custom("title":"50Hz")  {
 			//integer sensorId := sensorId;
 			string intensity :="";
 			float vInKmH := speedAvg * 3.6e-6;
@@ -40,7 +40,7 @@ query FunfzigHz {
 				intensity := "Low";
 			}else if (vInKmH <=17.0) then{
 				
-				intensity := "medium";
+				intensity := "Medium";
 			}else if (vInKmH <=24.0) then{
 				
 				intensity := "High";
@@ -51,7 +51,7 @@ query FunfzigHz {
 
 			float distance := (speedAvg * 1e-6) * ((ts_stop.toFloat() * 1e-12) - (ts_start.toFloat() * 1e-12));
 			
-			send RunningStatistics(ts_start, ts_stop, playerId, playerName,
+			send PlayerStatistics(ts_start, ts_stop, playerId, playerName,
 				intensity, distance,
 				vInKmH) to "";
 				

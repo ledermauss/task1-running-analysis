@@ -9,37 +9,82 @@ package com.softwareag.saep;
 using com.apama.aggregates.mean;
 using com.apama.correlator.timeformat.TimeFormat;
 using com.apama.aggregates.min;
+using com.apama.aggregates.max;
+
+using com.apama.aggregates.sum;
+
 
 monitor VelocityMonitor {
-
+	event IntensitySum {
+		float sum_distance;
+		integer time;
+	}
+	
 	action onload() {
-		PlayerVelocity playerV;
-		on all PlayerVelocity() : playerV {
+		PlayerEvent playerV;
+		on all PlayerEvent() : playerV {
 			log playerV.toString() at INFO;
 		}	
 //		float avg;
 //		//frequenz: 50 Hz (wird getrigerred jede 20 milisekunden.
 //		// Ich will das überprüfen durch  TimeFormat.getMicroTime, geht nicht
 //		on all wait(0.02) {
-//			from v in all PlayerVelocity(playerId = 0)
+//			from v in all PlayerEvent(playerId = 0)
 //			  within 0.02
 //			  select mean(v.velocity.toFloat()) : avg {
 //				//log "Current time:" + TimeFormat.getMicroTime() + "Avg for player 0" + " : " + avg.toString() at INFO;
 //				log "Current time:" + currentTime.toString() + "Avg for player 0" + " : " + avg.toString() at INFO;
 //
 //			}
-//			from v in all PlayerVelocity(playerId = 5)
+//			from v in all PlayerEvent(playerId = 5)
 //			  within 0.02
 //			  select mean(v.velocity.toFloat()) : avg {
 //				log "Current time:" + currentTime.toString() + " Avg for player 5" + " : " + avg.toString() at INFO;
 //			}
 //		}
-	
-		RunningStatistics runningS;
-		on all RunningStatistics() : runningS {
-			
+		float time_window := 60.0;
+		integer player_id := 0;
+//		sequence<string> intensities := ["Standig", "Trot", "Low", "Medium", "High","Sprint"];
+//		for i in intensities{
+//		}
+		stream<IntensitySum> standig :=
+			from ps in all PlayerStatistics(player_id = player_id)
+			within time_window
+			where (ps.intensity="Standig") 
+			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));
+		stream<IntensitySum> trot :=
+			from ps in all PlayerStatistics(player_id = player_id)
+			within time_window
+			where (ps.intensity="Trot") 
+			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));{
+			route Counter(3);
+			}
+		stream<IntensitySum> low :=
+			from ps in all PlayerStatistics(player_id = player_id)
+			within time_window
+			where (ps.intensity="Low") 
+			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));
+		stream<IntensitySum> medium :=
+			from ps in all PlayerStatistics(player_id = player_id)
+			within time_window
+			where (ps.intensity="Medium") 
+			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));
+		stream<IntensitySum> hihgh:=
+			from ps in all PlayerStatistics(player_id = player_id)
+			within time_window
+			where (ps.intensity="High") 
+			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));	
+		stream<IntensitySum> sprint:=
+			from ps in all PlayerStatistics(player_id = player_id)
+			within time_window
+			where (ps.intensity="Sprint") 
+			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));	
+		  
+		  
+		PlayerStatistics runningS;
+		on all PlayerStatistics() : runningS {
 			log runningS.toString() at INFO;
-			
 		}
+		
 	}
 }	

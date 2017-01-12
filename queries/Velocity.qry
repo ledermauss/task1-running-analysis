@@ -34,7 +34,7 @@ query Velocity {
 			//integer sensorId := sensorId;
 			integer playerId := sensorPlayer[sensorId];
 			string playerName := playerNameDict[playerId];
-			 send PlayerVelocity(playerId, playerName, s1.velocity, s1.velocityX, s1.timeStamp)
+			 send PlayerEvent(playerId, playerName, s1.velocity, s1.velocityX, s1.timeStamp)
 			 to "";
 		}
 	}

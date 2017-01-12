@@ -1,0 +1,19 @@
+//*****************************************************************************
+// Title:         Intensity1min
+// Description:   Intensity1min description
+// Dependencies:  None
+// Author:        istmapara
+//
+//*****************************************************************************
+
+package com.softwareag.saep;
+
+query Intensity1min {	
+	inputs  {
+		RunningStatistics() key player_id,  within 90 min;
+	}
+
+	find  {
+
+	}
+}
