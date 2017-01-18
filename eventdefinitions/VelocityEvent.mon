@@ -27,33 +27,21 @@ event PlayerStatistics {
 	float speed;
 }
 
-//event AggregateIntensity{
-//	integer ts;
-//	integer player_id;
-//	string player_name;
-//	string intensity;
-//	float distance;
-//}
-
 event AggregateStatistics {
 	integer ts;
 	integer player_id;
 	integer standing_time;
+	float standing_distance;
 	integer trot_time;
 	float trot_distance;
 	integer low_time;
 	float low_distance;
 	integer medium_time;
 	float medium_distance;
-	integer hihgh_time;
+	integer high_time;
 	float high_distance;
 	integer sprint_time;
 	float sprint_distance;
 }
 
 
-//event PlayerVelocity {
-//integer playerId;
-//integer velocity;
-//
-//}

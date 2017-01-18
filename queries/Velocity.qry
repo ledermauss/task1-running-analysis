@@ -10,6 +10,8 @@ package com.softwareag.saep;
 
 
 query Velocity {	
+	//Hier werden die Momentan Geschwendichkeit der Spielern extraierte,
+	//Und die Sensoresn werden zu dem sprechenden Spieler zugeordnet
 	inputs  {
 		SensorEvent() key sensorId retain 1;
 	}

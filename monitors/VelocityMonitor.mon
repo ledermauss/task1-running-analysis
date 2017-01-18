@@ -16,75 +16,80 @@ using com.apama.aggregates.sum;
 
 monitor VelocityMonitor {
 	event IntensitySum {
+		integer player_id;
+		string intensity;
 		float sum_distance;
 		integer time;
 	}
+	
+	//1-
+	AggregateStatistics agg_stat;
 	
 	action onload() {
 		PlayerEvent playerV;
 		on all PlayerEvent() : playerV {
 			log playerV.toString() at INFO;
 		}	
-//		float avg;
-//		//frequenz: 50 Hz (wird getrigerred jede 20 milisekunden.
-//		// Ich will das überprüfen durch  TimeFormat.getMicroTime, geht nicht
-//		on all wait(0.02) {
-//			from v in all PlayerEvent(playerId = 0)
-//			  within 0.02
-//			  select mean(v.velocity.toFloat()) : avg {
-//				//log "Current time:" + TimeFormat.getMicroTime() + "Avg for player 0" + " : " + avg.toString() at INFO;
-//				log "Current time:" + currentTime.toString() + "Avg for player 0" + " : " + avg.toString() at INFO;
-//
-//			}
-//			from v in all PlayerEvent(playerId = 5)
-//			  within 0.02
-//			  select mean(v.velocity.toFloat()) : avg {
-//				log "Current time:" + currentTime.toString() + " Avg for player 5" + " : " + avg.toString() at INFO;
-//			}
-//		}
-		float time_window := 60.0;
-		integer player_id := 0;
-//		sequence<string> intensities := ["Standig", "Trot", "Low", "Medium", "High","Sprint"];
-//		for i in intensities{
-//		}
-		stream<IntensitySum> standig :=
-			from ps in all PlayerStatistics(player_id = player_id)
-			within time_window
-			where (ps.intensity="Standig") 
-			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));
-		stream<IntensitySum> trot :=
-			from ps in all PlayerStatistics(player_id = player_id)
-			within time_window
-			where (ps.intensity="Trot") 
-			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));{
-			route Counter(3);
-			}
-		stream<IntensitySum> low :=
-			from ps in all PlayerStatistics(player_id = player_id)
-			within time_window
-			where (ps.intensity="Low") 
-			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));
-		stream<IntensitySum> medium :=
-			from ps in all PlayerStatistics(player_id = player_id)
-			within time_window
-			where (ps.intensity="Medium") 
-			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));
-		stream<IntensitySum> hihgh:=
-			from ps in all PlayerStatistics(player_id = player_id)
-			within time_window
-			where (ps.intensity="High") 
-			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));	
-		stream<IntensitySum> sprint:=
-			from ps in all PlayerStatistics(player_id = player_id)
-			within time_window
-			where (ps.intensity="Sprint") 
-			select IntensitySum(sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start));	
-		  
-		  
 		PlayerStatistics runningS;
 		on all PlayerStatistics() : runningS {
 			log runningS.toString() at INFO;
 		}
+		/* Frau Schestag:
+		Wir versuchten die sammelte Statistische von einem Spieler zu berechnen. Alle die von hier
+		bis zum Ende versuchen das. Wir haben es wie es folget gemacht:
+			1- Erzeugung des Ereigniss agg_stat. Dort werden wir speicher die gesamelte werte
+			2- Auswahl des Zeitfernsters und Spieler Id.
+			3- Gruppierung der Ereignissen mit den getrennte Statistiken (PlayerStatistics) in eienm StreamQuery,
+			die erzeugt ein Ereigniss IntensitySum mit der gesamelten Abstande und Zeit des Spielers auf diesem Intensität
+			4- Die Werte von den Ereignissen werden auf dem Ereigniss agg_sum gespeichert, und danach wird das 
+			Ereigniss "geroutet" und gelogt
+		Bei der Durchfürung des Codes werden Sie merken, dass die AggregateStatistics nicht korrekt sind (viele 0 werden erzeugt). 
+		Wir denken unseres Fehler ist, dass die gesamelte werte auf ein Ereigniss nicht gespeichert werden können. 
+		Aber wir sind nicht sicher.
+		*/
+		//2-
+		float time_window := 60.0;
+		integer playerid := 0;
+		agg_stat.player_id := playerid;
+		IntensitySum is;
+		//sequence<string> intensities := ["Standig", "Trot", "Low", "Medium", "High","Sprint"];
+		
+		//3-
+		from ps in all PlayerStatistics(player_id = playerid)
+		partition by ps.intensity within time_window
+		group by ps.intensity
+		select IntensitySum(playerid, ps.intensity, sum(ps.distance), max(ps.ts_stop)-min(ps.ts_start)):is{
+			route is;
+		}
+		
+		//4-
+		IntensitySum Isum;
+		on all IntensitySum(): Isum{
+			if (Isum.intensity = "Standig")  then {
+				agg_stat.standing_distance := Isum.sum_distance;
+				agg_stat.standing_time := Isum.time;
+			}else if (Isum.intensity = "Trot")  then {
+				agg_stat.trot_distance := Isum.sum_distance;
+				agg_stat.trot_time := Isum.time;
+			}else if (Isum.intensity = "Low")  then {
+				agg_stat.low_distance := Isum.sum_distance;
+				agg_stat.low_time := Isum.time;
+			}else if (Isum.intensity = "Medium")  then {
+				agg_stat.medium_distance := Isum.sum_distance;
+				agg_stat.medium_time := Isum.time;
+			}else if (Isum.intensity = "High")  then {
+				agg_stat.high_distance := Isum.sum_distance;
+				agg_stat.high_time := Isum.time;
+			}else if (Isum.intensity = "Sprint")  then {
+				agg_stat.sprint_distance := Isum.sum_distance;
+				agg_stat.sprint_time := Isum.time;
+			}
+		route agg_stat;			
+		}
+		AggregateStatistics ags;
+		on all AggregateStatistics(): ags{
+			log ags.toString() at INFO;
+		}  
 		
 	}
 }	

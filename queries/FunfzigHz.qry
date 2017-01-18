@@ -12,6 +12,10 @@ using com.apama.aggregates.max;
 using com.apama.aggregates.mean;
 
 query FunfzigHz {	
+	/* Hier werden die Intensitäten der Spielern zugeordnet.
+	 * Werden auch berechnet die Abstand, der Geschwindichkeit und
+	 * der Anfag und Ende des Spielers für dieses Interval.
+	 */
 	inputs  {
 		PlayerEvent() key playerId, playerName within 20 msec;
 		//oder retain 4
